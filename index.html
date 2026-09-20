@@ -474,11 +474,15 @@
             </div>
 
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                <h3 class="font-bold text-lg text-white mb-4">Daftar Siswa Terdaftar</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-white">Daftar Siswa Terdaftar</h3>
+                    <span class="text-xs text-slate-400">Klik "Edit Foto" untuk memperbarui sampel wajah siswa.</span>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-950 text-slate-400 uppercase border-b border-slate-800">
                             <tr>
+                                <th class="p-3">Foto</th>
                                 <th class="p-3">Siswa</th>
                                 <th class="p-3">NIS</th>
                                 <th class="p-3">Kelas</th>
@@ -491,6 +495,29 @@
                 </div>
             </div>
         </section>
+
+        <!-- MODAL EDIT FOTO SISWA -->
+        <div id="editFotoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+            <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <h3 class="font-bold text-white text-sm">Perbarui Foto & Vektor Wajah Siswa</h3>
+                    <button onclick="closeEditFotoModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+                <input type="hidden" id="editStudentId">
+                <div class="space-y-3">
+                    <p id="editStudentName" class="text-xs text-sky-400 font-bold"></p>
+                    <div class="w-full aspect-[4/3] bg-black rounded-xl overflow-hidden relative border border-slate-800 flex items-center justify-center">
+                        <video id="webcamEdit" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
+                        <canvas id="canvasEdit" class="hidden"></canvas>
+                        <img id="previewEditSnap" src="" alt="Captured" class="hidden w-full h-full object-cover">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="captureEditPhoto()" class="bg-slate-800 hover:bg-slate-700 text-sky-400 py-2 rounded-xl text-xs"><i class="fa-solid fa-camera me-1"></i> Ambil Foto Baru</button>
+                        <button type="button" onclick="saveEditedPhoto()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2 rounded-xl text-xs">Simpan Perubahan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- SECTION 3: DASHBOARD -->
         <section id="sec-dashboard" class="tab-content hidden space-y-6">
@@ -566,6 +593,7 @@
                 </div>
             </div>
 
+            <!-- OFFICIAL PRINTABLE KOP SURAT REPORT -->
             <div class="print-only print-container p-8 font-sans text-black bg-white">
                 <div class="flex items-center justify-between border-b-2 border-black pb-4 mb-6">
                     <div class="w-24 border border-black p-2 text-center flex flex-col items-center justify-center font-bold text-[10px] leading-tight">
@@ -1070,7 +1098,10 @@
                 state.cloudUrl = localStorage.getItem('smkn69_cloudurl') || '';
                 const urlEl = document.getElementById('cfgCloudUrl');
                 if (urlEl) urlEl.value = state.cloudUrl;
-            } catch(e) {}
+                if (state.students.length === 0) loadSampleData();
+            } catch(e) {
+                loadSampleData();
+            }
         }
 
         function saveDataToStorage() {
@@ -1082,10 +1113,44 @@
         }
 
         function renderAll() {
+            renderClassSelectOptions();
             renderStudentTable();
             renderMiniFeed();
             renderDashboardStats();
             renderRekapTable();
+            renderEditAttendanceTable();
+        }
+
+        function renderClassSelectOptions() {
+            const regSelect = document.getElementById('regKelas');
+            const rekapSelect = document.getElementById('filterKelasRekap');
+            const editSelect = document.getElementById('filterEditAbsenKelas');
+            const chipsContainer = document.getElementById('classListChips');
+
+            if (regSelect) {
+                const cur = regSelect.value;
+                regSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+                state.classes.forEach(c => regSelect.innerHTML += `<option value="${c}">${c}</option>`);
+                regSelect.value = cur;
+            }
+            if (rekapSelect) {
+                const cur = rekapSelect.value;
+                rekapSelect.innerHTML = '<option value="SEMUA">Semua Kelas</option>';
+                state.classes.forEach(c => rekapSelect.innerHTML += `<option value="${c}">${c}</option>`);
+                rekapSelect.value = cur;
+            }
+            if (editSelect) {
+                const cur = editSelect.value;
+                editSelect.innerHTML = '<option value="SEMUA">Semua Kelas</option>';
+                state.classes.forEach(c => editSelect.innerHTML += `<option value="${c}">${c}</option>`);
+                editSelect.value = cur;
+            }
+            if (chipsContainer) {
+                chipsContainer.innerHTML = '';
+                state.classes.forEach(c => {
+                    chipsContainer.innerHTML += `<span class="bg-sky-950 text-sky-400 border border-sky-800 px-2.5 py-1 rounded-xl text-xs font-semibold">${c}</span>`;
+                });
+            }
         }
 
         function renderStudentTable() {
@@ -1095,38 +1160,117 @@
             state.students.forEach(s => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
+                    <td class="p-3">
+                        <img src="${s.foto || 'https://placehold.co/100'}" alt="Foto" class="w-10 h-10 rounded-xl object-cover border border-slate-700">
+                    </td>
                     <td class="p-3 font-semibold text-white">${s.nama}</td>
                     <td class="p-3 font-mono text-slate-400">${s.nis}</td>
                     <td class="p-3">${s.kelas}</td>
                     <td class="p-3 font-mono text-slate-400">${s.wa}</td>
-                    <td class="p-3 text-right"><button onclick="deleteStudent('${s.id}')" class="text-rose-400 hover:underline">Hapus</button></td>
+                    <td class="p-3 text-right space-x-2">
+                        <button onclick="openEditFotoModal('${s.id}')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 px-2.5 py-1 rounded-lg text-[11px]"><i class="fa-solid fa-pen-to-square me-1"></i> Edit Foto</button>
+                        <button onclick="deleteStudent('${s.id}')" class="text-rose-400 hover:underline text-[11px]">Hapus</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
+        let editWebcamStream = null;
+        async function openEditFotoModal(studentId) {
+            const student = state.students.find(s => s.id === studentId);
+            if (!student) return;
+            document.getElementById('editStudentId').value = student.id;
+            document.getElementById('editStudentName').innerText = `${student.nama} (${student.nis})`;
+            document.getElementById('previewEditSnap').classList.add('hidden');
+            document.getElementById('webcamEdit').classList.remove('hidden');
+            document.getElementById('editFotoModal').classList.remove('hidden');
+
+            try {
+                editWebcamStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                document.getElementById('webcamEdit').srcObject = editWebcamStream;
+            } catch(e) {}
+        }
+
+        function closeEditFotoModal() {
+            if (editWebcamStream) editWebcamStream.getTracks().forEach(t => t.stop());
+            document.getElementById('editFotoModal').classList.add('hidden');
+        }
+
+        function captureEditPhoto() {
+            const video = document.getElementById('webcamEdit');
+            const canvas = document.getElementById('canvasEdit');
+            const preview = document.getElementById('previewEditSnap');
+            if (video && video.videoWidth) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                window._tempEditFoto = canvas.toDataURL('image/jpeg');
+            } else {
+                window._tempEditFoto = `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`;
+            }
+            preview.src = window._tempEditFoto;
+            preview.classList.remove('hidden');
+            video.classList.add('hidden');
+        }
+
+        function saveEditedPhoto() {
+            const studentId = document.getElementById('editStudentId').value;
+            const student = state.students.find(s => s.id === studentId);
+            if (student && window._tempEditFoto) {
+                student.foto = window._tempEditFoto;
+                saveDataToStorage();
+                syncToCloud('addStudent', student);
+                renderAll();
+                alert("Foto dan sampel wajah siswa berhasil diperbarui!");
+            }
+            closeEditFotoModal();
+        }
+
         function deleteStudent(id) {
-            state.students = state.students.filter(s => s.id !== id);
-            saveDataToStorage();
-            renderAll();
+            if (window.confirm("Hapus data siswa ini?")) {
+                state.students = state.students.filter(s => s.id !== id);
+                saveDataToStorage();
+                renderAll();
+            }
         }
 
         function renderMiniFeed() {
-            const container = document.getElementById('miniFeedList');
-            const countText = document.getElementById('countHariIni');
-            if (!container || !countText) return;
-            countText.innerText = `${state.attendanceLogs.length} Siswa`;
-            container.innerHTML = state.attendanceLogs.length === 0 ? '<div class="text-center py-6 text-xs text-slate-500">Belum ada aktivitas.</div>' : '';
-            state.attendanceLogs.slice(0, 5).forEach(l => {
-                container.innerHTML += `<div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs flex justify-between"><span><b>${l.nama}</b> (${l.kelas})</span><span class="text-sky-400 font-mono">${l.time}</span></div>`;
+            const list = document.getElementById('miniFeedList');
+            const count = document.getElementById('countHariIni');
+            const today = new Date().toISOString().split('T')[0];
+            const logs = state.attendanceLogs.filter(l => l.date === today);
+            if (count) count.innerText = `${logs.length} Siswa`;
+            if (!list) return;
+            list.innerHTML = '';
+            if (logs.length === 0) {
+                list.innerHTML = `<div class="text-center py-6 text-xs text-slate-500">Belum ada aktivitas presensi hari ini.</div>`;
+                return;
+            }
+            logs.slice(0, 5).forEach(l => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs">
+                        <div class="flex items-center gap-2">
+                            <img src="${l.foto || 'https://placehold.co/40'}" class="w-7 h-7 rounded-full object-cover">
+                            <div>
+                                <div class="font-bold text-white">${l.nama}</div>
+                                <div class="text-[10px] text-slate-400">${l.kelas} • ${l.time}</div>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${l.status === 'HADIR' ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'}">${l.status}</span>
+                    </div>
+                `;
             });
         }
 
         function renderDashboardStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const logs = state.attendanceLogs.filter(l => l.date === today);
             const total = state.students.length;
-            const hadir = state.attendanceLogs.filter(l => l.status === 'HADIR').length;
-            const terlambat = state.attendanceLogs.filter(l => l.status === 'TERLAMBAT').length;
+            const hadir = logs.filter(l => l.status === 'HADIR').length;
+            const terlambat = logs.filter(l => l.status === 'TERLAMBAT').length;
             const alpa = Math.max(0, total - (hadir + terlambat));
+
             if (document.getElementById('dashTotalSiswa')) document.getElementById('dashTotalSiswa').innerText = total;
             if (document.getElementById('dashHadirTepat')) document.getElementById('dashHadirTepat').innerText = hadir;
             if (document.getElementById('dashTerlambat')) document.getElementById('dashTerlambat').innerText = terlambat;
@@ -1135,8 +1279,15 @@
             const tbody = document.getElementById('dashLogTable');
             if (tbody) {
                 tbody.innerHTML = '';
-                state.attendanceLogs.forEach(l => {
-                    tbody.innerHTML += `<tr><td class="p-2.5 font-mono text-sky-400">${l.time}</td><td class="p-2.5 text-white font-semibold">${l.nama}</td><td class="p-2.5 text-slate-400">${l.kelas}</td><td class="p-2.5 text-emerald-400 font-bold">${l.status}</td></tr>`;
+                logs.forEach(l => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-800/40">
+                            <td class="p-2.5 font-mono text-sky-400">${l.time}</td>
+                            <td class="p-2.5 font-bold text-white">${l.nama}</td>
+                            <td class="p-2.5 text-slate-400">${l.kelas}</td>
+                            <td class="p-2.5 font-semibold ${l.status === 'HADIR' ? 'text-emerald-400' : 'text-amber-400'}">${l.status}</td>
+                        </tr>
+                    `;
                 });
             }
         }
@@ -1146,15 +1297,20 @@
             if (!ctx) return;
             state.chartInstance = new Chart(ctx, {
                 type: 'doughnut',
-                data: { labels: ['Hadir', 'Terlambat', 'Alpa'], datasets: [{ data: [0, 0, 1], backgroundColor: ['#10b981', '#f59e0b', '#334155'] }] },
+                data: {
+                    labels: ['Hadir', 'Terlambat', 'Alpa'],
+                    datasets: [{ data: [0, 0, 1], backgroundColor: ['#22c55e', '#f59e0b', '#f43f5e'] }]
+                },
                 options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
         function updateChart() {
             if (!state.chartInstance) return;
-            const hadir = state.attendanceLogs.filter(l => l.status === 'HADIR').length;
-            const terlambat = state.attendanceLogs.filter(l => l.status === 'TERLAMBAT').length;
+            const today = new Date().toISOString().split('T')[0];
+            const logs = state.attendanceLogs.filter(l => l.date === today);
+            const hadir = logs.filter(l => l.status === 'HADIR').length;
+            const terlambat = logs.filter(l => l.status === 'TERLAMBAT').length;
             const alpa = Math.max(0, state.students.length - (hadir + terlambat));
             state.chartInstance.data.datasets[0].data = [hadir, terlambat, alpa];
             state.chartInstance.update();
@@ -1163,32 +1319,95 @@
         function renderRekapTable() {
             const tbody = document.getElementById('rekapTableBody');
             const printTbody = document.getElementById('printTableBody');
+            const filterKelas = document.getElementById('filterKelasRekap')?.value || 'SEMUA';
             if (!tbody) return;
+
             tbody.innerHTML = '';
             if (printTbody) printTbody.innerHTML = '';
 
-            state.students.forEach((s, idx) => {
+            let list = state.students;
+            if (filterKelas !== 'SEMUA') list = list.filter(s => s.kelas === filterKelas);
+
+            list.forEach((s, idx) => {
                 const logs = state.attendanceLogs.filter(l => l.studentId === s.id);
                 const hadir = logs.filter(l => l.status === 'HADIR').length;
                 const terlambat = logs.filter(l => l.status === 'TERLAMBAT').length;
-                tbody.innerHTML += `<tr><td class="p-3">${idx+1}</td><td class="p-3 font-mono">${s.nis}</td><td class="p-3 font-bold">${s.nama}</td><td class="p-3">${s.kelas}</td><td class="p-3 text-center text-emerald-400">${hadir}</td><td class="p-3 text-center text-amber-400">${terlambat}</td><td class="p-3 text-center">0</td><td class="p-3 text-center text-rose-400">0</td><td class="p-3 text-center font-mono">100%</td></tr>`;
+                const pkl = logs.filter(l => l.status === 'PKL').length;
+                const alpa = Math.max(0, 20 - (hadir + terlambat + pkl));
+                const pct = Math.round(((hadir + terlambat) / 20) * 100);
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3">${idx + 1}</td>
+                        <td class="p-3 font-mono">${s.nis}</td>
+                        <td class="p-3 font-bold text-white">${s.nama}</td>
+                        <td class="p-3">${s.kelas}</td>
+                        <td class="p-3 text-center text-emerald-400 font-bold">${hadir}</td>
+                        <td class="p-3 text-center text-amber-400 font-bold">${terlambat}</td>
+                        <td class="p-3 text-center text-indigo-400 font-bold">${pkl}</td>
+                        <td class="p-3 text-center text-rose-400 font-bold">${alpa}</td>
+                        <td class="p-3 text-center font-bold text-sky-400">${pct}%</td>
+                    </tr>
+                `;
                 if (printTbody) {
-                    printTbody.innerHTML += `<tr><td class="border border-black p-2 text-center">${idx+1}</td><td class="border border-black p-2">${s.nis}</td><td class="border border-black p-2 font-bold">${s.nama}</td><td class="border border-black p-2">${s.kelas}</td><td class="border border-black p-2 text-center">${hadir}</td><td class="border border-black p-2 text-center">${terlambat}</td><td class="border border-black p-2 text-center">0</td><td class="border border-black p-2 text-center">0</td><td class="border border-black p-2 text-center">100%</td></tr>`;
+                    printTbody.innerHTML += `
+                        <tr class="text-center">
+                            <td class="border border-black p-1">${idx + 1}</td>
+                            <td class="border border-black p-1">${s.nis}</td>
+                            <td class="border border-black p-1 text-left font-bold">${s.nama}</td>
+                            <td class="border border-black p-1">${s.kelas}</td>
+                            <td class="border border-black p-1">${hadir}</td>
+                            <td class="border border-black p-1">${terlambat}</td>
+                            <td class="border border-black p-1">${pkl}</td>
+                            <td class="border border-black p-1">${alpa}</td>
+                            <td class="border border-black p-1 font-bold">${pct}%</td>
+                        </tr>
+                    `;
                 }
             });
         }
 
         function renderEditAttendanceTable() {
             const tbody = document.getElementById('editAttendanceTableBody');
+            const filterKelas = document.getElementById('filterEditAbsenKelas')?.value || 'SEMUA';
             if (!tbody) return;
             tbody.innerHTML = '';
-            state.attendanceLogs.forEach(l => {
-                tbody.innerHTML += `<tr><td class="p-3 font-mono">${l.date}</td><td class="p-3 font-bold">${l.nama}</td><td class="p-3">${l.kelas}</td><td class="p-3 font-mono">${l.time}</td><td class="p-3"><span class="bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold">${l.status}</span></td><td class="p-3 text-right"><select onchange="updateLogStatus('${l.id}', this.value)" class="bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-white"><option value="HADIR">HADIR</option><option value="TERLAMBAT">TERLAMBAT</option><option value="PKL">PKL</option><option value="IZIN">IZIN</option><option value="SAKIT">SAKIT</option><option value="ALPA">ALPA</option></select></td></tr>`;
+
+            let logs = state.attendanceLogs;
+            if (filterKelas !== 'SEMUA') logs = logs.filter(l => l.kelas === filterKelas);
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-500">Belum ada data log kehadiran.</td></tr>`;
+                return;
+            }
+
+            logs.forEach(l => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3 font-mono text-slate-400">${l.date}</td>
+                        <td class="p-3 font-bold text-white">${l.nama}</td>
+                        <td class="p-3">${l.kelas}</td>
+                        <td class="p-3 font-mono text-sky-400">${l.time}</td>
+                        <td class="p-3"><span class="px-2 py-0.5 rounded font-bold text-[10px] ${l.status === 'HADIR' ? 'bg-emerald-950 text-emerald-400' : 'bg-amber-950 text-amber-400'}">${l.status}</span></td>
+                        <td class="p-3 text-right">
+                            <select onchange="updateAttendanceStatus('${l.id}', this.value)" class="bg-slate-950 border border-slate-800 rounded px-2 py-1 text-xs text-white">
+                                <option value="">Ubah Status...</option>
+                                <option value="HADIR">Hadir</option>
+                                <option value="TERLAMBAT">Terlambat</option>
+                                <option value="IZIN">Izin</option>
+                                <option value="SAKIT">Sakit</option>
+                                <option value="PKL">PKL</option>
+                                <option value="ALPA">Alpa</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
             });
         }
 
-        function updateLogStatus(id, newStatus) {
-            const log = state.attendanceLogs.find(l => l.id === id);
+        function updateAttendanceStatus(logId, newStatus) {
+            if (!newStatus) return;
+            const log = state.attendanceLogs.find(l => l.id === logId);
             if (log) {
                 log.status = newStatus;
                 saveDataToStorage();
@@ -1202,21 +1421,29 @@
                 alert("Belum ada siswa terdaftar dalam sistem.");
                 return;
             }
-            const randomStudent = state.students[Math.floor(Math.random() * state.students.length)];
-            recordAttendance(randomStudent);
+            const s = state.students[Math.floor(Math.random() * state.students.length)];
+            recordAttendance(s);
         }
 
         function simulateFastScan() {
             processLiveScan();
         }
 
-        function showAttendanceResult(student, status, message) {
+        function showAttendanceResult(student, status, msg) {
             document.getElementById('resNama').innerText = student.nama;
             document.getElementById('resNIS').innerText = `NIS: ${student.nis}`;
             document.getElementById('resKelas').innerText = `Kelas: ${student.kelas}`;
-            document.getElementById('resFoto').src = student.foto || 'https://placehold.co/150';
+            document.getElementById('resFoto').src = student.foto;
             document.getElementById('resStatusText').innerText = status;
-            document.getElementById('timeBadge').innerText = new Date().toLocaleTimeString('id-ID');
+            document.getElementById('resStatusSub').innerText = msg;
+        }
+
+        function loadSampleData() {
+            state.students = [
+                { id: 'STD-1', nama: 'Budi Santoso', nis: '20266901', kelas: 'X RPL 1', jk: 'Laki-laki', wa: '081234567890', foto: 'https://placehold.co/150x150/0f172a/64748b?text=Budi' },
+                { id: 'STD-2', nama: 'Siti Aminah', nis: '20266902', kelas: 'X RPL 1', jk: 'Perempuan', wa: '081234567891', foto: 'https://placehold.co/150x150/0f172a/64748b?text=Siti' }
+            ];
+            saveDataToStorage();
         }
     </script>
 </body>
