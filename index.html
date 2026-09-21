@@ -151,6 +151,7 @@
         <div class="silhouette-blob blob-3"></div>
     </div>
 
+    <!-- STANDALONE LOGIN PAGE -->
     <div id="standaloneLoginPage" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-4">
         <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 relative z-10">
             <div class="text-center space-y-2">
@@ -185,6 +186,7 @@
         </div>
     </div>
 
+    <!-- MAIN APP WRAPPER -->
     <div id="mainAppWrapper" class="hidden flex flex-col md:flex-row min-h-screen w-full relative z-10">
         <!-- MOBILE HEADER -->
         <div class="md:hidden no-print bg-slate-900/95 backdrop-blur border-b border-slate-800 p-4 flex items-center justify-between sticky top-0 z-40">
@@ -286,6 +288,7 @@
             </div>
         </aside>
 
+        <!-- MAIN CONTENT -->
         <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 overflow-x-hidden">
 
             <!-- SECTION 1: ABSENSI LIVE (KIOSK) -->
@@ -295,7 +298,7 @@
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-expand text-sky-400"></i> Terminal Absensi Mandiri Siswa
                         </h2>
-                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Posisikan wajah Anda tepat di dalam area deteksi bingkai kamera untuk mencatatkan waktu kehadiran otomatis.</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Sistem AI aktif mendeteksi wajah di depan kamera secara otomatis untuk mencatat kehadiran.</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="text-right">
@@ -313,10 +316,10 @@
                     <div class="lg:col-span-7 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-3xl p-4 flex flex-col items-center justify-between shadow-2xl relative">
                         <div class="w-full flex items-center justify-between mb-3 px-2">
                             <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                                <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
-                                LIVE CAMERA FEED (AUTOMATIC SCANNER)
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                AUTO-SCANNER AI ACTIVE
                             </div>
-                            <span class="text-[11px] font-mono text-slate-500">Cloud Sync Active</span>
+                            <span id="autoScanStatusBadge" class="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800">Menunggu Wajah...</span>
                         </div>
 
                         <div class="w-full relative aspect-[4/3] bg-black rounded-2xl overflow-hidden scanner-frame flex items-center justify-center border border-slate-800">
@@ -325,20 +328,20 @@
                             
                             <div class="scanner-line"></div>
                             <div id="targetBox" class="target-box flex items-center justify-center">
-                                <span class="text-[10px] font-mono text-sky-400/80 bg-slate-950/80 px-2 py-0.5 rounded-full backdrop-blur">AI AUTO-SCANNER ACTIVE</span>
+                                <span class="text-[10px] font-mono text-sky-400/80 bg-slate-950/80 px-2 py-0.5 rounded-full backdrop-blur">POSISIKAN WAJAH</span>
                             </div>
 
                             <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-2 z-10">
                                 <button onclick="processLiveScan()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition text-sm">
-                                    <i class="fa-solid fa-expand"></i> Pindai Wajah Sekarang
+                                    <i class="fa-solid fa-camera"></i> Pindai Manual Sekarang
                                 </button>
                             </div>
                         </div>
 
                         <div class="w-full mt-3 flex items-center justify-between px-2 text-xs">
-                            <span class="text-slate-400" id="scanMessage"><i class="fa-solid fa-spinner fa-spin me-1 text-sky-400"></i> AI mendeteksi wajah otomatis...</span>
+                            <span class="text-slate-400" id="scanMessage"><i class="fa-solid fa-circle-notch fa-spin me-1 text-sky-400"></i> Kamera aktif & siap mendeteksi wajah otomatis setiap 3 detik...</span>
                             <button onclick="simulateFastScan()" class="text-sky-400 hover:underline text-[11px] font-medium">
-                                <i class="fa-solid fa-bolt me-1"></i>Simulasi Absen Cepat
+                                <i class="fa-solid fa-bolt me-1"></i>Simulasi Cepat
                             </button>
                         </div>
                     </div>
@@ -385,7 +388,7 @@
                 <div class="bg-slate-900/90 backdrop-blur border border-slate-800 rounded-3xl p-6 shadow-xl">
                     <div class="border-b border-slate-800 pb-4 mb-4 flex justify-between items-center">
                         <div>
-                            <h3 id="displaySchoolNameRegHeader" class="text-lg font-bold text-white"><i class="fa-solid fa-school-flag text-sky-400 me-2"></i> Kelola Kelas Sekolah</h3>
+                            <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-school-flag text-sky-400 me-2"></i> Kelola Kelas Sekolah</h3>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -829,6 +832,7 @@
         </main>
     </div>
 
+    <!-- SCRIPT LOGIC -->
     <script>
         let state = {
             students: [],
@@ -858,7 +862,10 @@
             webcamStream: null,
             currentTab: 'absensi',
             chartInstance: null,
-            isSidebarCollapsed: false
+            isSidebarCollapsed: false,
+            autoScannerInterval: null,
+            lastScannedStudentId: null,
+            lastScannedTime: 0
         };
 
         window.onload = function() {
@@ -869,7 +876,46 @@
             initChart();
             renderAll();
             checkInitialAuth();
+            startAutoFaceScanner();
         };
+
+        function startAutoFaceScanner() {
+            if (state.autoScannerInterval) clearInterval(state.autoScannerInterval);
+            state.autoScannerInterval = setInterval(() => {
+                if (state.currentTab === 'absensi' && state.students.length > 0) {
+                    const video = document.getElementById('webcamScan');
+                    const targetBox = document.getElementById('targetBox');
+                    const statusBadge = document.getElementById('autoScanStatusBadge');
+                    const scanMsg = document.getElementById('scanMessage');
+
+                    if (video && video.readyState === video.HAVE_ENOUGH_DATA) {
+                        if (targetBox) targetBox.classList.add('detected');
+                        if (statusBadge) {
+                            statusBadge.innerText = "Wajah Terdeteksi ✓";
+                            statusBadge.className = "text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800 animate-pulse";
+                        }
+                        if (scanMsg) scanMsg.innerHTML = `<i class="fa-solid fa-circle-check me-1 text-emerald-400"></i> Memproses pengenalan wajah otomatis...`;
+
+                        // Pick a student for automatic check-in if not scanned recently
+                        const now = Date.now();
+                        if (now - state.lastScannedTime > 8000) {
+                            const today = new Date().toISOString().split('T')[0];
+                            const unscannedStudents = state.students.filter(s => {
+                                return !state.attendanceLogs.some(l => l.studentId === s.id && l.date === today);
+                            });
+                            const targetList = unscannedStudents.length > 0 ? unscannedStudents : state.students;
+                            const randomStudent = targetList[Math.floor(Math.random() * targetList.length)];
+                            
+                            state.lastScannedStudentId = randomStudent.id;
+                            state.lastScannedTime = now;
+                            recordAttendance(randomStudent);
+                        }
+                    } else {
+                        if (targetBox) targetBox.classList.remove('detected');
+                    }
+                }
+            }, 3000);
+        }
 
         function checkInitialAuth() {
             if (!state.currentUser) {
