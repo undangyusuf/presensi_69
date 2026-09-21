@@ -50,7 +50,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         
-        /* Animated Silhouette / Glow Background Effects */
         .silhouette-bg {
             position: fixed;
             top: 0;
@@ -146,14 +145,12 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-sky-500 selection:text-white relative">
 
-    <!-- Animated Background Silhouette Layer -->
     <div class="silhouette-bg">
         <div class="silhouette-blob blob-1"></div>
         <div class="silhouette-blob blob-2"></div>
         <div class="silhouette-blob blob-3"></div>
     </div>
 
-    <!-- HALAMAN LOGIN UTAMA (DEFAULT OPEN SAAT WEBSITE DIBUKA) -->
     <div id="standaloneLoginPage" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xl flex flex-col items-center justify-center p-4">
         <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 relative z-10">
             <div class="text-center space-y-2">
@@ -164,7 +161,7 @@
                 <p id="loginPageSub" class="text-xs text-slate-400">SIAB-FACE 69 - Sistem Absensi SMK Negeri 69 Jakarta</p>
             </div>
 
-            <!-- Role Switcher di Halaman Login -->
+            <!-- Role Switcher in Login -->
             <div class="grid grid-cols-2 gap-2 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
                 <button type="button" onclick="setLoginRole('admin')" id="roleBtnAdmin" class="py-2.5 text-xs font-bold rounded-xl transition bg-sky-600 text-white shadow">Admin Sekolah</button>
                 <button type="button" onclick="setLoginRole('walikelas')" id="roleBtnWali" class="py-2.5 text-xs font-bold rounded-xl transition text-slate-400 hover:text-white">Wali Kelas</button>
@@ -188,7 +185,6 @@
         </div>
     </div>
 
-    <!-- MAIN APP WRAPPER (HIDDEN SEBELUM LOGIN) -->
     <div id="mainAppWrapper" class="hidden flex flex-col md:flex-row min-h-screen w-full relative z-10">
         <!-- MOBILE HEADER -->
         <div class="md:hidden no-print bg-slate-900/95 backdrop-blur border-b border-slate-800 p-4 flex items-center justify-between sticky top-0 z-40">
@@ -290,7 +286,6 @@
             </div>
         </aside>
 
-        <!-- MAIN CONTAINER -->
         <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 overflow-x-hidden">
 
             <!-- SECTION 1: ABSENSI LIVE (KIOSK) -->
@@ -772,15 +767,60 @@
                 </div>
             </section>
 
-            <!-- SECTION 9: PENGATURAN -->
+            <!-- SECTION 9: PENGATURAN JAM & HARI LIBUR -->
             <section id="sec-pengaturan" class="tab-content hidden space-y-6">
                 <div class="bg-slate-900/90 backdrop-blur border border-slate-800 rounded-3xl p-6 shadow-xl max-w-4xl mx-auto space-y-6">
-                    <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-calendar-days text-sky-400 me-2"></i> Pengaturan Jam & Kalender Libur</h2>
-                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
-                        <h4 class="text-xs font-bold text-sky-400 uppercase">Jam Masuk</h4>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1">Batas Toleransi Terlambat</label>
-                            <input type="time" id="cfgJamBatas" value="07:00" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2 text-xs text-white">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-xl font-bold text-white"><i class="fa-solid fa-calendar-days text-sky-400 me-2"></i> Pengaturan Jam & Kalender Hari Libur</h2>
+                        <p class="text-xs text-slate-400 mt-1">Atur jam masuk, jam pulang, toleransi keterlambatan, dan daftar hari libur sekolah.</p>
+                    </div>
+
+                    <form onsubmit="handleSaveJamSettings(event)" class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <h3 class="font-bold text-white text-sm"><i class="fa-solid fa-clock text-sky-400 me-2"></i> Konfigurasi Jam Operasional Presensi</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Jam Masuk Sekolah *</label>
+                                <input type="time" id="inputJamMasuk" value="07:00" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Batas Toleransi Terlambat *</label>
+                                <input type="time" id="inputBatasTerlambat" value="07:15" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Jam Pulang Sekolah *</label>
+                                <input type="time" id="inputJamPulang" value="15:00" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow">Simpan Jam Operasional</button>
+                    </form>
+
+                    <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-white text-sm"><i class="fa-solid fa-calendar-xmark text-rose-400 me-2"></i> Kalender Hari Libur Nasional & Sekolah</h3>
+                        </div>
+                        <form onsubmit="handleAddHoliday(event)" class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                            <div class="md:col-span-4">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Tanggal Libur *</label>
+                                <input type="date" id="inputLiburTanggal" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono">
+                            </div>
+                            <div class="md:col-span-6">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Keterangan Libur *</label>
+                                <input type="text" id="inputLiburKeterangan" required placeholder="Contoh: Hari Kemerdekaan / Libur Semester" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-white">
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs">Tambah</button>
+                            </div>
+                        </form>
+
+                        <div class="overflow-x-auto pt-2">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-900 text-slate-400 uppercase">
+                                    <tr><th class="p-3">Tanggal</th><th class="p-3">Keterangan</th><th class="p-3 text-right">Aksi</th></tr>
+                                </thead>
+                                <tbody id="holidayTableBody" class="divide-y divide-slate-800 text-slate-300">
+                                    <tr><td colspan="3" class="text-center py-4 text-slate-500">Belum ada hari libur terdaftar.</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -799,6 +839,8 @@
             currentUser: null,
             audioSpeechEnabled: true,
             batasJamMasuk: '07:00',
+            batasTerlambat: '07:15',
+            jamPulang: '15:00',
             schoolProfile: {
                 name: 'SEKOLAH MENENGAH KEJURUAN NEGERI 69',
                 npsn: '20108392',
@@ -1024,6 +1066,57 @@
             alert("Profil sekolah, kop surat, dan logo berhasil diperbarui!");
         }
 
+        function handleSaveJamSettings(e) {
+            e.preventDefault();
+            state.batasJamMasuk = document.getElementById('inputJamMasuk').value;
+            state.batasTerlambat = document.getElementById('inputBatasTerlambat').value;
+            state.jamPulang = document.getElementById('inputJamPulang').value;
+            saveDataToStorage();
+            document.getElementById('displayBatasJam').innerText = state.batasTerlambat + ':00 WIB';
+            alert("Pengaturan jam operasional dan toleransi keterlambatan berhasil disimpan!");
+        }
+
+        function handleAddHoliday(e) {
+            e.preventDefault();
+            const tanggal = document.getElementById('inputLiburTanggal').value;
+            const keterangan = document.getElementById('inputLiburKeterangan').value.trim();
+            if (tanggal && keterangan) {
+                state.holidays.push({ id: 'HOL-' + Date.now(), tanggal, keterangan });
+                saveDataToStorage();
+                renderHolidayTable();
+                document.getElementById('inputLiburTanggal').value = '';
+                document.getElementById('inputLiburKeterangan').value = '';
+                alert("Hari libur berhasil ditambahkan!");
+            }
+        }
+
+        function deleteHoliday(id) {
+            state.holidays = state.holidays.filter(h => h.id !== id);
+            saveDataToStorage();
+            renderHolidayTable();
+        }
+
+        function renderHolidayTable() {
+            const tbody = document.getElementById('holidayTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            if (state.holidays.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-slate-500">Belum ada hari libur terdaftar.</td></tr>`;
+                return;
+            }
+            state.holidays.forEach(h => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3 font-mono text-sky-400">${h.tanggal}</td>
+                        <td class="p-3 font-semibold text-white">${h.keterangan}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="deleteHoliday('${h.id}')" class="text-rose-400 hover:underline text-xs">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
         function applySchoolProfileUI() {
             const logoImg = document.getElementById('sidebarLogoImg');
             const printLogo = document.getElementById('printLogoImg');
@@ -1193,7 +1286,7 @@
             const now = new Date();
             const timeStr = now.toLocaleTimeString('id-ID');
             const todayStr = now.toISOString().split('T')[0];
-            const isLate = (now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0')) > state.batasJamMasuk;
+            const isLate = (now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0')) > state.batasTerlambat;
             const status = isLate ? "TERLAMBAT" : "HADIR";
 
             const newLog = {
@@ -1257,6 +1350,7 @@
             try {
                 state.students = JSON.parse(localStorage.getItem('smkn69_students') || '[]');
                 state.attendanceLogs = JSON.parse(localStorage.getItem('smkn69_logs') || '[]');
+                state.holidays = JSON.parse(localStorage.getItem('smkn69_holidays') || '[]');
                 state.cloudUrl = localStorage.getItem('smkn69_cloudurl') || '';
                 const savedClasses = JSON.parse(localStorage.getItem('smkn69_classes') || '[]');
                 if (savedClasses.length > 0) state.classes = savedClasses;
@@ -1264,10 +1358,16 @@
                 const savedProfile = JSON.parse(localStorage.getItem('smkn69_school_profile') || 'null');
                 if (savedProfile) state.schoolProfile = savedProfile;
 
+                const savedBatasMasuk = localStorage.getItem('smkn69_masuk');
+                const savedBatasTerlambat = localStorage.getItem('smkn69_terlambat');
+                const savedPulang = localStorage.getItem('smkn69_pulang');
+                if (savedBatasMasuk) state.batasJamMasuk = savedBatasMasuk;
+                if (savedBatasTerlambat) state.batasTerlambat = savedBatasTerlambat;
+                if (savedPulang) state.jamPulang = savedPulang;
+
                 const urlEl = document.getElementById('cfgCloudUrl');
                 if (urlEl) urlEl.value = state.cloudUrl;
 
-                // Set inputs in profile tab
                 document.getElementById('inputSchoolName').value = state.schoolProfile.name;
                 document.getElementById('inputSchoolNpsn').value = state.schoolProfile.npsn;
                 document.getElementById('inputKop1').value = state.schoolProfile.kop1;
@@ -1279,7 +1379,13 @@
                 document.getElementById('inputPrincipalName').value = state.schoolProfile.principalName;
                 document.getElementById('inputPrincipalNip').value = state.schoolProfile.principalNip;
 
+                document.getElementById('inputJamMasuk').value = state.batasJamMasuk;
+                document.getElementById('inputBatasTerlambat').value = state.batasTerlambat;
+                document.getElementById('inputJamPulang').value = state.jamPulang;
+                document.getElementById('displayBatasJam').innerText = state.batasTerlambat + ':00 WIB';
+
                 applySchoolProfileUI();
+                renderHolidayTable();
 
                 if (state.students.length === 0) loadSampleData();
             } catch(e) {
@@ -1291,9 +1397,13 @@
             try {
                 localStorage.setItem('smkn69_students', JSON.stringify(state.students));
                 localStorage.setItem('smkn69_logs', JSON.stringify(state.attendanceLogs));
+                localStorage.setItem('smkn69_holidays', JSON.stringify(state.holidays));
                 localStorage.setItem('smkn69_classes', JSON.stringify(state.classes));
                 localStorage.setItem('smkn69_current_user', JSON.stringify(state.currentUser));
                 localStorage.setItem('smkn69_school_profile', JSON.stringify(state.schoolProfile));
+                localStorage.setItem('smkn69_masuk', state.batasJamMasuk);
+                localStorage.setItem('smkn69_terlambat', state.batasTerlambat);
+                localStorage.setItem('smkn69_pulang', state.jamPulang);
             } catch(e) {}
         }
 
@@ -1304,6 +1414,7 @@
             renderDashboardStats();
             renderRekapTable();
             renderEditAttendanceTable();
+            renderHolidayTable();
         }
 
         function renderClassSelectOptions() {
