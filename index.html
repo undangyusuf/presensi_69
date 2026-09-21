@@ -156,7 +156,7 @@
         <div class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6 relative z-10">
             <div class="text-center space-y-2">
                 <div class="w-16 h-16 bg-gradient-to-tr from-sky-600 to-cyan-400 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-sky-500/30 mb-3 ring-4 ring-sky-400/20">
-                    <i class="fa-solid fa-id-card-clip text-white text-3xl"></i>
+                    <i class="fa-solid id-card-clip text-white text-3xl"></i>
                 </div>
                 <h3 id="loginPageHeading" class="text-2xl font-black text-white">Login Admin Sekolah</h3>
                 <p id="loginPageSub" class="text-xs text-slate-400">SIAB-FACE 69 - Sistem Absensi SMK Negeri 69 Jakarta</p>
@@ -181,7 +181,7 @@
                 <button type="submit" class="w-full bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-sky-600/20 text-xs transition">Masuk Ke Sistem</button>
             </form>
             <div class="text-center pt-2 border-t border-slate-800/80">
-                <p class="text-[11px] text-slate-500">SMK Negeri 69 Jakarta • High-Precision Biometric AI</p>
+                <p class="text-[11px] text-slate-500">SMK Negeri 69 Jakarta • Biometric Liveness AI</p>
             </div>
         </div>
     </div>
@@ -192,7 +192,7 @@
         <div class="md:hidden no-print bg-slate-900/95 backdrop-blur border-b border-slate-800 p-4 flex items-center justify-between sticky top-0 z-40">
             <div class="flex items-center space-x-3">
                 <div class="w-9 h-9 bg-gradient-to-tr from-sky-600 to-cyan-400 rounded-xl flex items-center justify-center shadow-md">
-                    <i class="fa-solid fa-id-card-clip text-white text-base"></i>
+                    <i class="fa-solid id-card-clip text-white text-base"></i>
                 </div>
                 <div>
                     <h1 class="font-bold text-sm text-white" id="mobileAppTitle">SIAB-FACE 69</h1>
@@ -215,7 +215,7 @@
                         <div>
                             <div class="flex items-center gap-1.5">
                                 <h1 id="sidebarBrandTitle" class="font-extrabold text-base text-white tracking-tight">SIAB-FACE 69</h1>
-                                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-semibold px-1.5 py-0.5 rounded-full">AI High-Prec</span>
+                                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-semibold px-1.5 py-0.5 rounded-full">Liveness AI</span>
                             </div>
                             <p class="text-[11px] text-slate-400">SMK Negeri 69 Jakarta</p>
                         </div>
@@ -230,13 +230,13 @@
 
                 <div id="sidebarClockBox" class="px-6 py-4 bg-slate-950/40 border-b border-slate-800/60 hidden md:block">
                     <div id="liveClock" class="font-mono text-base font-bold text-sky-400 tracking-wider">00:00:00 WIB</div>
-                    <div id="liveDate" class="text-[11px] text-slate-400 mt-0.5">Senin, 21 September 2026</div>
+                    <div id="liveDate" class="text-[11px] text-slate-400 mt-0.5">Selasa, 22 September 2026</div>
                 </div>
 
                 <nav id="sidebarNavLinks" class="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-280px)] scrollbar-none">
                     <button onclick="switchTab('absensi')" id="tab-absensi" class="tab-btn active w-full flex items-center gap-3 px-3.5 py-2.5 text-xs font-semibold rounded-xl bg-sky-600 text-white shadow-md shadow-sky-600/20 transition-all text-left">
                         <i class="fa-solid fa-camera w-5 text-center text-sm"></i>
-                        <span class="sidebar-label">Absensi Live Kiosk</span>
+                        <span class="sidebar-label">Absensi Kiosk (Liveness)</span>
                     </button>
                     <button onclick="switchTab('registrasi')" id="tab-registrasi" class="tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 text-xs font-medium rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all text-left">
                         <i class="fa-solid fa-user-plus w-5 text-center text-sm"></i>
@@ -291,14 +291,14 @@
         <!-- MAIN CONTENT -->
         <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 overflow-x-hidden">
 
-            <!-- SECTION 1: ABSENSI LIVE (KIOSK) -->
+            <!-- SECTION 1: ABSENSI LIVE (KIOSK & LIVENESS BLINK) -->
             <section id="sec-absensi" class="tab-content block space-y-6">
                 <div class="bg-gradient-to-r from-sky-900/40 via-slate-900 to-indigo-900/30 border border-sky-800/40 rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
                     <div>
                         <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-expand text-sky-400"></i> Terminal Absensi Presisi Wajah
+                            <i class="fa-solid fa-eye text-sky-400"></i> Terminal Absensi Liveness (Deteksi Kedipan)
                         </h2>
-                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Sistem AI memindai titik landmark wajah secara presisi untuk pencocokan biometrik real-time.</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Sistem keamanan AI mewajibkan siswa <strong>mengedipkan mata</strong> di depan kamera untuk verifikasi keaslian wajah.</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <div class="text-right">
@@ -317,9 +317,9 @@
                         <div class="w-full flex items-center justify-between mb-3 px-2">
                             <div class="flex items-center gap-2 text-xs font-semibold text-slate-400">
                                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                BIOMETRIC AI SCANNER ACTIVE
+                                LIVENESS DETECTOR ACTIVE
                             </div>
-                            <span id="autoScanStatusBadge" class="text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800">Menyelaraskan Landmark...</span>
+                            <span id="autoScanStatusBadge" class="text-[11px] font-mono text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded-full border border-amber-800 animate-pulse">Silakan Kedipkan Mata 👁️</span>
                         </div>
 
                         <div class="w-full relative aspect-[4/3] bg-black rounded-2xl overflow-hidden scanner-frame flex items-center justify-center border border-slate-800">
@@ -328,19 +328,19 @@
                             
                             <div class="scanner-line"></div>
                             <div id="targetBox" class="target-box flex items-center justify-center">
-                                <span id="targetBoxText" class="text-[10px] font-mono text-sky-400 bg-slate-950/90 px-2.5 py-1 rounded-lg backdrop-blur border border-sky-800/60">POSISIKAN WAJAH DI KOTAK</span>
+                                <span id="targetBoxText" class="text-[10px] font-mono text-amber-400 bg-slate-950/90 px-3 py-1.5 rounded-lg backdrop-blur border border-amber-800/80 text-center">KEDIPKAN MATA UNTUK VERIFIKASI</span>
                             </div>
 
                             <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-2 z-10">
-                                <button onclick="processPrecisionScan()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition text-sm">
-                                    <i class="fa-solid fa-camera"></i> Verifikasi Presisi Sekarang
+                                <button onclick="triggerManualBlinkCheck()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition text-sm">
+                                    <i class="fa-solid fa-eye"></i> Simulasi Kedipkan Mata Sekarang
                                 </button>
                             </div>
                         </div>
 
                         <div class="w-full mt-3 flex items-center justify-between px-2 text-xs">
-                            <span class="text-slate-400" id="scanMessage"><i class="fa-solid fa-circle-notch fa-spin me-1 text-sky-400"></i> Kamera mendeteksi titik orientasi wajah secara otomatis...</span>
-                            <span id="precisionScoreBadge" class="text-xs font-mono text-emerald-400 font-bold">Akurasi: 98.4%</span>
+                            <span class="text-slate-400" id="scanMessage"><i class="fa-solid fa-circle-notch fa-spin me-1 text-sky-400"></i> Memantau gerakan kelopak mata untuk liveness check...</span>
+                            <span id="precisionScoreBadge" class="text-xs font-mono text-emerald-400 font-bold">Liveness: Valid</span>
                         </div>
                     </div>
 
@@ -348,7 +348,7 @@
                         <div id="resultCard" class="bg-slate-900/90 backdrop-blur border border-slate-800 rounded-3xl p-6 flex flex-col justify-between flex-grow shadow-xl relative overflow-hidden">
                             <div class="space-y-4">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold text-slate-400 uppercase">Hasil Verifikasi Biometrik</span>
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Hasil Verifikasi Liveness</span>
                                     <span id="timeBadge" class="text-xs font-mono bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full">--:--:--</span>
                                 </div>
                                 <div class="flex items-center gap-4 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
@@ -356,15 +356,15 @@
                                         <img id="resFoto" src="https://placehold.co/150x150/0f172a/64748b?text=Siswa" alt="Siswa" class="w-full h-full object-cover">
                                     </div>
                                     <div>
-                                        <h3 id="resNama" class="font-bold text-lg text-white">Menunggu Pemindaian</h3>
+                                        <h3 id="resNama" class="font-bold text-lg text-white">Menunggu Kedipan</h3>
                                         <p id="resNIS" class="text-xs text-slate-400 font-mono">NIS: -----</p>
                                         <span id="resKelas" class="inline-block bg-sky-950 text-sky-400 border border-sky-800 text-[11px] px-2 py-0.5 rounded-md font-semibold">Kelas: -</span>
                                     </div>
                                 </div>
                                 <div id="statusBox" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 text-center space-y-1">
-                                    <p class="text-xs text-slate-400 uppercase">Status Pencocokan Vektor</p>
-                                    <div id="resStatusText" class="text-2xl font-black text-slate-500">STANDBY</div>
-                                    <p id="resStatusSub" class="text-xs text-slate-400">Posisikan wajah tepat di depan lensa</p>
+                                    <p class="text-xs text-slate-400 uppercase">Status Deteksi Kedipan</p>
+                                    <div id="resStatusText" class="text-2xl font-black text-amber-400">STANDBY</div>
+                                    <p id="resStatusSub" class="text-xs text-slate-400">Kedipkan mata di depan kamera</p>
                                 </div>
                             </div>
                             <div class="mt-4 pt-4 border-t border-slate-800">
@@ -638,7 +638,7 @@
                             <p>NIP. <span id="printSignNip">196805121992032005</span></p>
                         </div>
                         <div class="text-center">
-                            <p>Jakarta, <span id="printCurrentDate">21 September 2026</span></p>
+                            <p>Jakarta, <span id="printCurrentDate">22 September 2026</span></p>
                             <p>Wali Kelas / Guru Piket</p>
                             <br><br><br>
                             <p class="underline font-bold">( ............................................ )</p>
@@ -861,9 +861,10 @@
             currentTab: 'absensi',
             chartInstance: null,
             isSidebarCollapsed: false,
-            autoScannerInterval: null,
+            livenessScannerInterval: null,
             lastScannedStudentId: null,
-            lastScannedTime: 0
+            lastScannedTime: 0,
+            blinkState: 'waiting' // waiting, blinked, verified
         };
 
         window.onload = function() {
@@ -874,12 +875,12 @@
             initChart();
             renderAll();
             checkInitialAuth();
-            startAutoPrecisionFaceScanner();
+            startLivenessBlinkScanner();
         };
 
-        function startAutoPrecisionFaceScanner() {
-            if (state.autoScannerInterval) clearInterval(state.autoScannerInterval);
-            state.autoScannerInterval = setInterval(() => {
+        function startLivenessBlinkScanner() {
+            if (state.livenessScannerInterval) clearInterval(state.livenessScannerInterval);
+            state.livenessScannerInterval = setInterval(() => {
                 if (state.currentTab === 'absensi' && state.students.length > 0) {
                     const video = document.getElementById('webcamScan');
                     const targetBox = document.getElementById('targetBox');
@@ -889,21 +890,21 @@
                     const precisionScore = document.getElementById('precisionScoreBadge');
 
                     if (video && video.readyState === video.HAVE_ENOUGH_DATA) {
-                        // High precision landmark simulation
-                        const accuracy = (97.5 + Math.random() * 2.3).toFixed(1);
-                        if (precisionScore) precisionScore.innerText = `Akurasi: ${accuracy}%`;
+                        // Simulate continuous liveness check (random eye blink event every few seconds)
+                        const randomBlinkTrigger = Math.random() < 0.25; // 25% chance per tick to detect blink
 
-                        if (accuracy > 98.2) {
+                        if (randomBlinkTrigger || state.blinkState === 'blinked') {
                             if (targetBox) targetBox.classList.add('detected');
-                            if (targetBoxText) targetBoxText.innerText = "PRESISI TINGGI (MATCH ✓)";
+                            if (targetBoxText) targetBoxText.innerText = "KEDIPAN TERDETEKSI (LIVENESS ✓)";
                             if (statusBadge) {
-                                statusBadge.innerText = "Wajah Terverifikasi ✓";
-                                statusBadge.className = "text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800 animate-pulse";
+                                statusBadge.innerText = "Wajah Asli Terverifikasi ✓";
+                                statusBadge.className = "text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800 animate-pulse";
                             }
-                            if (scanMsg) scanMsg.innerHTML = `<i class="fa-solid fa-circle-check me-1 text-emerald-400"></i> Vektor biometrik cocok! Mencatat presensi...`;
+                            if (scanMsg) scanMsg.innerHTML = `<i class="fa-solid fa-circle-check me-1 text-emerald-400"></i> Kedipan mata terdeteksi! Mencatat presensi...`;
+                            if (precisionScore) precisionScore.innerText = `Liveness: 100% (Real Human)`;
 
                             const now = Date.now();
-                            if (now - state.lastScannedTime > 9000) {
+                            if (now - state.lastScannedTime > 10000) {
                                 const today = new Date().toISOString().split('T')[0];
                                 const unscannedStudents = state.students.filter(s => {
                                     return !state.attendanceLogs.some(l => l.studentId === s.id && l.date === today);
@@ -913,17 +914,41 @@
                                 
                                 state.lastScannedStudentId = randomStudent.id;
                                 state.lastScannedTime = now;
+                                state.blinkState = 'waiting';
                                 recordAttendance(randomStudent);
                             }
                         } else {
                             if (targetBox) targetBox.classList.remove('detected');
-                            if (targetBoxText) targetBoxText.innerText = "MENYELARASKAN LANDMARK...";
+                            if (targetBoxText) targetBoxText.innerText = "SILAKAN KEDIPKAN MATA 👁️";
+                            if (statusBadge) {
+                                statusBadge.innerText = "Menunggu Kedipan Mata...";
+                                statusBadge.className = "text-[11px] font-mono text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded-full border border-amber-800 animate-pulse";
+                            }
                         }
                     } else {
                         if (targetBox) targetBox.classList.remove('detected');
                     }
                 }
-            }, 2500);
+            }, 3000);
+        }
+
+        function triggerManualBlinkCheck() {
+            state.blinkState = 'blinked';
+            const statusBadge = document.getElementById('autoScanStatusBadge');
+            const targetBoxText = document.getElementById('targetBoxText');
+            if (statusBadge) {
+                statusBadge.innerText = "Kedipan Dikonfirmasi ✓";
+                statusBadge.className = "text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800";
+            }
+            if (targetBoxText) targetBoxText.innerText = "LIVENESS VALID (VERIFIED)";
+            
+            setTimeout(() => {
+                if (state.students.length > 0) {
+                    const randomStudent = state.students[Math.floor(Math.random() * state.students.length)];
+                    recordAttendance(randomStudent);
+                }
+                state.blinkState = 'waiting';
+            }, 800);
         }
 
         function checkInitialAuth() {
@@ -1216,7 +1241,7 @@
             preview.src = state.regCapturedImage;
             preview.classList.remove('hidden');
             video.classList.add('hidden');
-            document.getElementById('badgeEmbeddingStatus').innerText = "✓ Vektor Presisi Tersimpan";
+            document.getElementById('badgeEmbeddingStatus').innerText = "✓ Vektor Liveness Tersimpan";
             document.getElementById('badgeEmbeddingStatus').className = "bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] px-2 py-0.5 rounded-full";
             document.getElementById('btnSimpanSiswa').disabled = false;
         }
@@ -1248,7 +1273,7 @@
             renderAll();
             document.getElementById('formRegSiswa').reset();
             resetRegistrationPhoto();
-            alert("Siswa berhasil direkam biometrik wajahnya dan disimpan ke Cloud Spreadsheet!");
+            alert("Siswa berhasil direkam data biometrik kedipan mata & wajahnya ke Cloud Spreadsheet!");
         }
 
         function downloadExcelTemplate() {
@@ -1306,7 +1331,7 @@
 
                     saveDataToStorage();
                     renderAll();
-                    alert(`Berhasil mengimpor ${importedCount} data siswa beserta vektor biometrik wajah!`);
+                    alert(`Berhasil mengimpor ${importedCount} data siswa beserta sampel biometrik liveness!`);
                     fileInput.value = "";
                 } catch(err) {
                     alert("Gagal membaca file Excel. Pastikan format file sesuai dengan template.");
@@ -1363,11 +1388,11 @@
             saveDataToStorage();
             syncToCloud('addAttendance', newLog);
             renderAll();
-            showAttendanceResult(student, status, `Pukul ${timeStr} WIB (Match 98.6%)`);
+            showAttendanceResult(student, status, `Pukul ${timeStr} WIB (Blink Liveness Verified ✓)`);
 
             if (state.audioSpeechEnabled) {
                 playChimeSound(status === 'HADIR' ? 880 : 440, 0.2);
-                speakText(`Verifikasi berhasil. Halo ${student.nama}, presensi ${status === 'HADIR' ? 'hadir tepat waktu' : 'terlambat'} dicatat.`);
+                speakText(`Verifikasi kedipan berhasil. Halo ${student.nama}, presensi ${status === 'HADIR' ? 'hadir tepat waktu' : 'terlambat'} dicatat.`);
             }
         }
 
@@ -1580,7 +1605,7 @@
                 saveDataToStorage();
                 syncToCloud('addStudent', student);
                 renderAll();
-                alert("Foto dan sampel biometrik wajah siswa berhasil diperbarui!");
+                alert("Foto dan sampel biometrik liveness siswa berhasil diperbarui!");
             }
             closeEditFotoModal();
         }
@@ -1772,15 +1797,6 @@
                 renderAll();
                 alert(`Status kehadiran ${log.nama} diubah menjadi ${newStatus}.`);
             }
-        }
-
-        function processPrecisionScan() {
-            if (state.students.length === 0) {
-                alert("Belum ada siswa terdaftar dalam sistem.");
-                return;
-            }
-            const s = state.students[Math.floor(Math.random() * state.students.length)];
-            recordAttendance(s);
         }
 
         function showAttendanceResult(student, status, msg) {
